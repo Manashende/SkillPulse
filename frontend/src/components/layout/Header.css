@@ -1,0 +1,98 @@
+.topbar {
+  position: sticky; top: 0; z-index: 50;
+  
+  /* Highly transparent white for a beautiful glassmorphism effect */
+  background: rgba(255, 255, 255, 0.75); 
+  backdrop-filter: blur(16px); 
+  -webkit-backdrop-filter: blur(16px);
+  
+  /* Subtle structural border and floating shadow */
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 20px -10px rgba(0, 0, 0, 0.05);
+  
+  padding: 0 2.5rem; 
+  display: flex; align-items: center; gap: 1.5rem;
+  height: var(--header-h, 72px); 
+  
+  /* CHANGED: Removed max-height and overflow. Added transform to the transition */
+  transition: background-color var(--transition), border-color var(--transition),
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease, box-shadow 0.3s ease;
+}
+
+.topbar-hidden {
+  /* CHANGED: Use transform to slide it up cleanly without changing layout height */
+  transform: translateY(-100%);
+  opacity: 0;
+  border-bottom-color: transparent;
+  box-shadow: none;
+  pointer-events: none;
+}
+
+/* Dark mode glassmorphism matching your dark card background */
+[data-theme='dark'] .topbar { 
+  background: rgba(28, 22, 16, 0.75); /* Matches --bg-card in dark mode */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 4px 20px -10px rgba(0, 0, 0, 0.3);
+}
+
+.topbar-left    { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+.topbar-title   { font-size: 1.15rem; font-weight: 800; color: var(--text); letter-spacing: -0.02em; line-height: 1.2; }
+.topbar-subtitle{ font-size: 0.8rem; font-weight: 500; color: var(--text-muted); margin-top: 2px; }
+
+.topbar-right   { display: flex; align-items: center; gap: 0.75rem; }
+
+/* Refined Icon Button */
+.theme-toggle {
+  width: 38px; height: 38px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-secondary);
+  background: transparent; 
+  border: 1.5px solid transparent; /* Transparent resting border */
+  cursor: pointer; 
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Target the SVG icon inside the button */
+.theme-toggle svg {
+  width: 18px; 
+  height: 18px; 
+  transition: transform 0.3s ease;
+}
+
+.theme-toggle:hover {
+  background: var(--primary-bg); 
+  color: var(--orange); 
+  border-color: rgba(249, 115, 22, 0.2);
+  transform: translateY(-2px); /* Slight lift on hover */
+}
+
+.theme-toggle:hover svg {
+  transform: rotate(15deg); /* Playful tilt on hover */
+}
+
+.theme-toggle:active {
+  transform: translateY(0);
+}
+
+/* Mobile Menu Adjustments */
+.mobile-menu-btn { 
+  display: none; 
+  color: var(--text-secondary); 
+  padding: 0.4rem; 
+  cursor: pointer; 
+  border-radius: 8px;
+  background: transparent;
+  border: none;
+  transition: background 0.2s;
+}
+
+.mobile-menu-btn:hover {
+  background: var(--bg-2);
+  color: var(--text);
+}
+
+@media (max-width: 768px) {
+  .mobile-menu-btn { display: flex; align-items: center; justify-content: center; }
+  .topbar { padding: 0 1.25rem; height: 64px; }
+  .topbar-subtitle { display: none; } /* Hide subtitle on mobile to save space */
+}

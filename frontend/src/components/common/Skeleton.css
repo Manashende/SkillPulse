@@ -1,0 +1,17 @@
+@keyframes skeleton-shimmer {
+  0% { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+
+.skeleton-block {
+  background: linear-gradient(90deg, var(--bg-2) 25%, var(--border) 37%, var(--bg-2) 63%);
+  background-size: 800px 100%;
+  animation: skeleton-shimmer 1.6s linear infinite;
+  display: block;
+  flex-shrink: 0;
+}
+
+[data-theme='dark'] .skeleton-block {
+  background: linear-gradient(90deg, var(--bg-2) 25%, var(--border-strong) 37%, var(--bg-2) 63%);
+  background-size: 800px 100%;
+}

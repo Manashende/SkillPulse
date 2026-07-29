@@ -1,0 +1,265 @@
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: var(--sidebar-w, 260px);
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  overflow-y: auto;
+  transition: transform 0.25s ease, width 0.25s ease;
+}
+
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1.25rem 1.25rem 1rem;
+  border-bottom: 1px solid var(--border);
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.18s;
+}
+
+.sidebar-brand:hover {
+  background: var(--bg-2);
+}
+
+.sidebar-close-btn {
+  display: none;
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  color: var(--text-secondary);
+  cursor: pointer;
+  z-index: 3;
+  transition: all 0.15s;
+}
+
+.sidebar-close-btn:hover {
+  background: var(--danger-bg);
+  color: var(--red);
+  border-color: var(--red);
+}
+
+.brand-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 10px;
+  flex-shrink: 0;
+  object-fit: cover;
+  box-shadow: 0 3px 10px rgba(255, 90, 90, 0.3);
+}
+
+.brand-name {
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+
+.brand-sub {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  margin-top: 1px;
+}
+
+.sidebar-user {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem 0.5rem;
+}
+
+.sidebar-avatar {
+  width: 28px;
+  height: 28px;
+  background: linear-gradient(135deg, #fff0ee, #ffe4d4);
+  color: var(--red);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.75rem;
+  border: 2px solid var(--primary-border);
+  flex-shrink: 0;
+}
+
+.sidebar-user-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-user-name {
+  font-size: 0.825rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.sidebar-user-level {
+  font-size: 0.7rem;
+  color: var(--orange);
+  font-weight: 600;
+  margin-top: 1px;
+}
+
+/* --- Added Missing XP Bar Styles --- */
+.sidebar-xp-bar {
+  width: 100%;
+  height: 5px;
+  background: var(--border, #eee);
+  border-radius: 3px;
+  margin: 0.4rem 0 0.2rem;
+  overflow: hidden;
+}
+
+.sidebar-xp-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #FF5A5A, #FFA95A);
+  border-radius: 3px;
+  transition: width 0.4s ease-out;
+}
+
+.sidebar-xp-label {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  margin-bottom: 0.35rem;
+}
+
+/* --- Navigation Styles --- */
+.sidebar-nav {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem 0.75rem;
+  gap: 2px;
+}
+
+.sidebar-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.575rem 0.875rem;
+  color: var(--text-secondary);
+  font-size: 0.865rem;
+  font-weight: 500;
+  border-radius: 10px;
+  transition: all 0.18s;
+  text-decoration: none;
+}
+
+.sidebar-nav-item:hover {
+  color: var(--orange);
+  background: var(--primary-bg);
+  text-decoration: none;
+}
+
+.sidebar-nav-item.active {
+  color: var(--red);
+  background: var(--primary-bg);
+  font-weight: 700;
+  border: 1px solid var(--primary-border);
+}
+
+.sidebar-nav-icon {
+  font-size: 0.95rem;
+  width: 15px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.sidebar-nav-label {
+  flex: 1;
+}
+
+.sidebar-footer {
+  padding: 0.75rem;
+  border-top: 1px solid var(--border);
+}
+
+.sidebar-logout {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.575rem 0.875rem;
+  width: 100%;
+  color: var(--text-muted);
+  font-size: 0.865rem;
+  font-weight: 500;
+  border-radius: 10px;
+  transition: all 0.18s;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+}
+
+.sidebar-logout:hover {
+  color: var(--red);
+  background: var(--danger-bg);
+}
+
+@media (min-width: 769px) {
+  .sidebar.collapsed {
+    width: 64px;
+  }
+
+  .sidebar.collapsed .brand-text,
+  .sidebar.collapsed .sidebar-user-info,
+  .sidebar.collapsed .sidebar-nav-label,
+  .sidebar.collapsed .sidebar-logout-label {
+    display: none;
+  }
+
+  .sidebar.collapsed .sidebar-nav-item,
+  .sidebar.collapsed .sidebar-logout {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: min(260px, 82vw);
+    transform: translateX(-100%);
+    box-shadow: 4px 0 24px rgba(0,0,0,0.1);
+  }
+  .sidebar.open { transform: translateX(0); }
+  .sidebar-collapse-btn { display: none; }
+  .sidebar-close-btn { display: flex; }
+  .sidebar-brand { padding-right: 3rem; }
+
+  /* Ignore desktop collapse state entirely on mobile — the drawer must
+     always be full-width, regardless of what --sidebar-w is currently
+     set to on .app-layout (which only makes sense for the desktop rail). */
+  .sidebar.collapsed {
+    width: min(260px, 82vw);
+  }
+  .sidebar.collapsed .brand-text,
+  .sidebar.collapsed .sidebar-user-info,
+  .sidebar.collapsed .sidebar-nav-label,
+  .sidebar.collapsed .sidebar-logout-label {
+    display: block;
+  }
+  .sidebar.collapsed .sidebar-brand,
+  .sidebar.collapsed .sidebar-user,
+  .sidebar.collapsed .sidebar-nav-item,
+  .sidebar.collapsed .sidebar-logout {
+    justify-content: flex-start;
+  }
+}

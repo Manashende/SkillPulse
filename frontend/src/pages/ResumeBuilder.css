@@ -1,0 +1,870 @@
+/* ── Layout ── */
+.resume-builder {
+  display: grid;
+  grid-template-columns: 440px 1fr;
+  gap: 1.5rem;
+
+  /* 1. Lock the entire layout to the screen height minus your header/padding */
+  /* inplace of var(--header-h) there is 47px remember*/
+  height: calc(100vh - var(--header-h));
+  /* 2. Stop the overall window from scrolling */
+  overflow: hidden;
+}
+
+@media (max-width: 1100px) {
+  .resume-builder {
+    grid-template-columns: 1fr;
+    height: auto;
+    overflow: visible;
+  }
+
+  .resume-editor-outer {
+    height: auto;
+    overflow: visible;
+  }
+
+  .resume-preview-wrap {
+    height: auto;
+    overflow-y: visible;
+  }
+}
+
+/* ── Editor ── */
+.resume-editor-outer {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+
+  /* 3. Fill the height of the locked grid */
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 0;
+}
+
+/* (Keep your existing .resume-editor rule below it exactly the same) */
+.resume-editor {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.resume-editor-header {
+  padding: 1.5rem 1.5rem 0;
+  flex-shrink: 0;
+}
+
+.resume-editor-title {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 0.25rem;
+}
+
+.resume-editor-sub {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+}
+
+/* Template */
+.resume-template-row {
+  padding: 0 1.5rem 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.resume-template-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+}
+
+.resume-template-btns {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.resume-template-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.875rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.18s;
+  font-family: inherit;
+}
+
+.resume-template-btn:hover {
+  border-color: var(--ta, var(--orange));
+  color: var(--ta, var(--orange));
+}
+
+.resume-template-btn.active {
+  border-color: var(--ta, var(--orange));
+  background: color-mix(in srgb, var(--ta, var(--orange)) 12%, var(--bg-card));
+  color: var(--ta, var(--orange));
+}
+
+.template-swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* Section nav */
+.resume-section-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  padding: 0.875rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+}
+
+.resume-sec-btn {
+  padding: 0.35rem 0.75rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  border-radius: 100px;
+  border: 1.5px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: inherit;
+}
+
+.resume-sec-btn:hover {
+  border-color: var(--orange);
+  color: var(--orange);
+}
+
+.resume-sec-btn.active {
+  background: linear-gradient(135deg, #FF5A5A, #FF8B5A);
+  border-color: transparent;
+  color: #fff;
+}
+
+.resume-form-section {
+  padding: 1.25rem 1.5rem;
+}
+
+.resume-item-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.125rem;
+  margin-bottom: 0.875rem;
+}
+
+.resume-item-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.875rem;
+}
+
+.resume-item-num {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--orange);
+}
+
+.resume-item-remove {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--red);
+  background: var(--danger-bg);
+  border: none;
+  border-radius: 6px;
+  padding: 0.2rem 0.5rem;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+
+.resume-item-remove:hover {
+  background: var(--red);
+  color: #fff;
+}
+
+.resume-add-item-btn {
+  width: 100%;
+  padding: 0.625rem;
+  background: var(--primary-bg);
+  color: var(--orange);
+  border: 1.5px dashed var(--primary-border);
+  border-radius: 10px;
+  font-size: 0.84rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.18s;
+  font-family: inherit;
+}
+
+.resume-add-item-btn:hover {
+  background: var(--bg);
+  border-style: solid;
+}
+
+.resume-tip {
+  background: var(--primary-bg);
+  border: 1px solid var(--primary-border);
+  border-radius: 8px;
+  padding: 0.75rem;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+}
+
+.resume-toggle-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.resume-toggle-label input {
+  width: 14px;
+  height: 14px;
+  accent-color: var(--orange);
+}
+
+.resume-level-slider-row {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+}
+
+.resume-level-val {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--orange);
+  white-space: nowrap;
+}
+
+.resume-skills-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  margin-top: 0.875rem;
+}
+
+.resume-skill-tag {
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  padding: 0.2rem 0.625rem;
+  border-radius: 100px;
+  color: var(--text-secondary);
+}
+
+.resume-cert-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+/* ── ATS Score section ── */
+.ats-score-section {
+  margin: 0 1.5rem 1rem;
+  background: var(--hero-bg);
+  border: 1.5px solid var(--primary-border);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+}
+
+.ats-score-header {
+  margin-bottom: 0.875rem;
+}
+
+.ats-score-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 0.2rem;
+}
+
+.ats-score-sub {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.ats-target-row {
+  display: flex;
+  gap: 0.625rem;
+}
+
+.ats-target-input {
+  flex: 1;
+  height: 34px;
+  font-size: 0.84rem;
+}
+
+.ats-score-btn {
+  padding: 0 1rem;
+  height: 34px;
+  white-space: nowrap;
+  background: linear-gradient(135deg, #FF5A5A, #FF8B5A);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.84rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: inherit;
+  flex-shrink: 0;
+}
+
+.ats-score-btn:hover:not(:disabled) {
+  filter: brightness(1.06);
+}
+
+.ats-score-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.ats-score-btn.loading {
+  background: linear-gradient(135deg, #e05a3a, #cc7525);
+}
+
+.ats-clear-btn {
+  padding: 0 1rem;
+  height: 34px;
+  white-space: nowrap;
+  background: transparent;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  color: var(--text-secondary);
+  font-size: 0.84rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s;
+  font-family: inherit;
+  flex-shrink: 0;
+}
+
+.ats-clear-btn:hover {
+  border-color: var(--red);
+  color: var(--red);
+}
+
+@keyframes atsSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.ats-spinner {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #fff;
+  animation: atsSpin 0.7s linear infinite;
+}
+
+.ats-results {
+  margin-top: 1.125rem;
+}
+
+.ats-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1.5rem;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+}
+
+.ats-score-rings {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.875rem;
+}
+
+.ats-overall {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.ats-grade {
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.ats-sub-rings {
+  display: flex;
+  gap: 0.875rem;
+  flex-wrap: wrap;
+}
+
+.ats-summary {
+  font-size: 0.84rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 0.875rem;
+  padding: 0.75rem;
+  background: var(--bg);
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.ats-block {
+  margin-bottom: 0.875rem;
+}
+
+.ats-block-title {
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.5rem;
+}
+
+.ats-green {
+  color: var(--success-text);
+}
+
+.ats-red {
+  color: var(--red);
+}
+
+.ats-strength-item {
+  font-size: 0.82rem;
+  color: var(--success-text);
+  margin-bottom: 0.3rem;
+  padding: 0.35rem 0.75rem;
+  background: var(--success-strong-bg);
+  border-radius: 6px;
+  border: 1px solid var(--success-strong-border);
+}
+
+.ats-improvement-item {
+  margin-bottom: 0.625rem;
+  padding: 0.625rem 0.875rem;
+  background: var(--danger-bg);
+  border: 1px solid var(--danger-border);
+  border-radius: 8px;
+}
+
+.ats-issue {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--red);
+  margin-bottom: 0.2rem;
+}
+
+.ats-fix {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.ats-keywords-row {
+  display: flex;
+  gap: 0.875rem;
+  flex-wrap: wrap;
+}
+
+.ats-keyword-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+}
+
+.ats-kw-found {
+  font-size: 0.72rem;
+  font-weight: 700;
+  background: var(--success-strong-bg);
+  color: var(--success-text);
+  border: 1px solid var(--success-strong-border);
+  padding: 0.15rem 0.55rem;
+  border-radius: 100px;
+}
+
+.ats-kw-missing {
+  font-size: 0.72rem;
+  font-weight: 700;
+  background: var(--danger-bg);
+  color: var(--red);
+  border: 1px solid var(--danger-border);
+  padding: 0.15rem 0.55rem;
+  border-radius: 100px;
+}
+
+/* Print */
+.resume-print-row {
+  padding: 1rem 1.5rem 1.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.resume-print-btn {
+  width: 100%;
+  justify-content: center;
+}
+
+.resume-print-hint {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-align: center;
+  margin-top: 0.375rem;
+}
+
+/* ── Preview ── */
+.resume-preview-wrap {
+  /* 4. Let the right side handle its own scrolling */
+  height: 100%;
+  overflow-y: auto;
+  padding-bottom: 3rem;
+  padding-right: 0.5rem;
+  /* Optional: adds a little breathing room for the scrollbar */
+  min-width: 0;
+  /* critical: without this, the grid column locks to the
+    unscaled 210mm page width on first paint and never shrinks — see
+    ResumeBuilder.jsx's previewScale comment for the full explanation */
+}
+
+.resume-preview-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.75rem;
+}
+
+#resume-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  min-width: 0;
+}
+
+.resume-page {
+  width: 210mm;
+  min-height: 297mm;
+  box-sizing: border-box;
+  padding: 1.5cm;
+  background: #fff;
+  border-radius: 4px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
+  font-family: 'Georgia', serif;
+  color: #1e1a16;
+  font-size: 10pt;
+  line-height: 1.6;
+  position: relative;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.resume-page-number {
+  position: absolute;
+  bottom: 0.6cm;
+  right: 1.5cm;
+  font-size: 8pt;
+  color: #999;
+}
+
+.resume-page-scale-wrap {
+  /* zoom shrinks the box's real layout size (not just its paint), so the
+     browser fits it natively — no JS measurement needed, and therefore
+     no possible race condition. */
+  display: flex;
+  justify-content: center;
+}
+
+@media (max-width: 1100px) {
+  .resume-page-scale-wrap {
+    zoom: 0.8;
+  }
+}
+
+@media (max-width: 820px) {
+  .resume-page-scale-wrap {
+    zoom: 0.62;
+  }
+}
+
+@media (max-width: 480px) {
+  .resume-page-scale-wrap {
+    zoom: 0.42;
+  }
+}
+
+@media (max-width: 360px) {
+  .resume-page-scale-wrap {
+    zoom: 0.35;
+  }
+}
+
+.rp-name {
+  font-size: 20pt;
+}
+
+.rp-section-title {
+  font-size: 9pt;
+}
+
+.rp-bullet,
+.rp-summary,
+.rp-skill-list {
+  font-size: 9pt;
+}
+
+.rp-header {
+  margin-bottom: 1.25rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--accent);
+}
+
+.rp-name {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #1e1a16;
+  margin-bottom: 0.375rem;
+}
+
+.rp-contact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  font-size: 0.78rem;
+  color: #4a4a4a;
+}
+
+.rp-section {
+  margin-bottom: 1.25rem;
+}
+
+.rp-section-title {
+  font-size: 0.85rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  border-bottom: 1.5px solid var(--accent);
+  padding-bottom: 0.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.rp-summary {
+  font-size: 0.84rem;
+  color: #333;
+  line-height: 1.7;
+}
+
+.rp-item {
+  margin-bottom: 0.875rem;
+}
+
+.rp-item-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.3rem;
+}
+
+.rp-item-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #1e1a16;
+}
+
+.rp-item-sub {
+  font-size: 0.8rem;
+  color: #555;
+}
+
+.rp-tech {
+  font-weight: 500;
+  color: #666;
+  font-style: italic;
+}
+
+.rp-url {
+  font-size: 0.75rem;
+  color: var(--accent);
+}
+
+.rp-item-date {
+  font-size: 0.78rem;
+  color: #777;
+  white-space: nowrap;
+  text-align: right;
+}
+
+.rp-item-date-col {
+  text-align: right;
+}
+
+.rp-item-cgpa {
+  font-size: 0.75rem;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.rp-item-desc {
+  margin-top: 0.25rem;
+}
+
+.rp-bullet {
+  font-size: 0.82rem;
+  color: #333;
+  margin-bottom: 0.2rem;
+  padding-left: 0.25rem;
+}
+
+.rp-skill-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.3rem;
+  font-size: 0.82rem;
+  flex-wrap: wrap;
+}
+
+.rp-skill-cat {
+  font-weight: 700;
+  color: var(--accent);
+  min-width: 100px;
+  flex-shrink: 0;
+}
+
+.rp-skill-list {
+  color: #333;
+}
+
+/* Templates */
+.resume-minimal .rp-name {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.resume-minimal .rp-header {
+  border-bottom: 1px solid #333;
+}
+
+.resume-minimal .rp-section-title {
+  color: #1e1a16 !important;
+  border-bottom: 1px solid #ccc !important;
+  font-weight: 700;
+}
+
+.resume-minimal .rp-item-cgpa,
+.resume-minimal .rp-url,
+.resume-minimal .rp-skill-cat {
+  color: #1e1a16 !important;
+}
+
+.resume-minimal .rp-contact-link {
+  border-bottom-color: #1e1a16;
+}
+
+.resume-creative .rp-header {
+  background: var(--accent);
+  border-radius: 8px;
+  padding: 1.25rem;
+  margin: -2.5rem -2.5rem 1.25rem;
+  border-bottom: none;
+}
+
+.resume-creative .rp-name {
+  color: #fff;
+}
+
+.resume-creative .rp-contact {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.resume-creative .rp-section-title {
+  background: color-mix(in srgb, var(--accent) 10%, white);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  border: none;
+}
+
+.resume-creative.resume-preview {
+  grid-template-columns: 1fr 240px;
+}
+
+@media print {
+
+  .resume-editor,
+  .resume-preview-label,
+  .resume-page-number {
+    display: none !important;
+  }
+
+  .resume-builder {
+    display: block !important;
+  }
+
+  #resume-preview {
+    gap: 0;
+  }
+
+  .resume-page {
+    box-shadow: none;
+    border-radius: 0;
+    margin: 0;
+    width: 100%;
+    min-height: 100vh;
+  }
+
+  .resume-page:not(:last-child) {
+    page-break-after: always;
+    break-after: page;
+  }
+
+  @page {
+    margin: 0;
+    size: A4;
+  }
+}
+
+.rp-contact-link {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px dotted currentColor;
+}
+
+.rp-contact-link:hover {
+  opacity: 0.7;
+}
+
+.resume-save-indicator {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.resume-save-indicator.saved {
+  color: #10b981;
+}
