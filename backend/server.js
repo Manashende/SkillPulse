@@ -1,4 +1,11 @@
 require('dotenv').config();
+const dns = require('dns');
+// Render's network doesn't support outbound IPv6. Node 18+ resolves
+// dual-stack hosts (like smtp.gmail.com) IPv6-first by default, which then
+// hangs/fails on Render before falling back to IPv4. This forces IPv4-first
+// resolution process-wide, so nodemailer (and anything else making outbound
+// connections) gets a reachable address on the first try.
+dns.setDefaultResultOrder('ipv4first');
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
