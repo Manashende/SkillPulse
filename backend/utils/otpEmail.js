@@ -22,6 +22,12 @@ const getTransporter = () => {
     port: Number(SMTP_PORT) || 587,
     secure: Number(SMTP_PORT) === 465,
     auth: { user: SMTP_USER, pass: SMTP_PASS },
+    // Render's network doesn't support outbound IPv6, but Gmail's SMTP host
+    // resolves to both an IPv4 and IPv6 address — Node tries IPv6 first by
+    // default and hangs for the full timeout before failing over. Forcing
+    // IPv4 here skips that entirely.
+    family: 4,
+    connectionTimeout: 10000,
   });
   return transporter;
 };
