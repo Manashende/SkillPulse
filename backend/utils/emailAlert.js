@@ -1,52 +1,26 @@
 // backend/utils/emailAlert.js
 //
-// Best-effort same-day email alert when a Gemini API key dies. Silently
-// no-ops (just logs a warning) if SMTP env vars aren't set, so this never
-// blocks the actual request path if you haven't configured it yet.
+// Best-effort same-day email alert when a Gemini API key dies. Sends via
+// mailer.js (Brevo HTTPS API) — see mailer.js's comment for why this
+// replaced raw SMTP (Render blocks outbound SMTP ports entirely).
 //
-// Works with any SMTP provider — Gmail (needs an "app password", not your
-// normal password), Brevo's free tier, SendGrid's SMTP relay, etc.
-// Set these to turn it on:
-//   SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, ALERT_EMAIL_TO
-//
-// Requires: npm install nodemailer
+// Unlike otpEmail.js, this stays best-effort: a failed alert email should
+// never break the actual AI request path that triggered it, so failures
+// are logged and swallowed rather than thrown.
 
-let transporter = null;
-
-const getTransporter = () => {
-  if (transporter) return transporter;
-  const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS } = process.env;
-  if (!SMTP_HOST || !SMTP_USER || !SMTP_PASS) return null;
-
-  const nodemailer = require('nodemailer');
-  transporter = nodemailer.createTransport({
-    host: SMTP_HOST,
-    port: Number(SMTP_PORT) || 587,
-    secure: Number(SMTP_PORT) === 465,
-    auth: { user: SMTP_USER, pass: SMTP_PASS },
-    // Render's network doesn't support outbound IPv6, but Gmail's SMTP host
-    // resolves to both an IPv4 and IPv6 address — Node tries IPv6 first by
-    // default and hangs for the full timeout before failing over. Forcing
-    // IPv4 here skips that entirely.
-    family: 4,
-    connectionTimeout: 10000,
-  });
-  return transporter;
-};
+const { sendEmail } = require('./mailer');
 
 const sendKeyFailureAlert = async ({ keyMasked, reason, deadCount, totalKeys }) => {
   const to = process.env.ALERT_EMAIL_TO;
-  const t = getTransporter();
-  if (!t || !to) {
-    console.warn('[Gemini] Key failure alert not sent — SMTP_* / ALERT_EMAIL_TO not configured.');
+  if (!to) {
+    console.warn('[Gemini] Key failure alert not sent — ALERT_EMAIL_TO not configured.');
     return;
   }
 
   const allDead = deadCount >= totalKeys;
 
   try {
-    await t.sendMail({
-      from: process.env.SMTP_USER,
+    await sendEmail({
       to,
       subject: allDead
         ? '\uD83D\uDD34 SkillPulse: ALL Gemini API keys are down'

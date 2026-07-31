@@ -1,45 +1,12 @@
 // backend/utils/otpEmail.js
 //
-// Sends the signup email-verification OTP. Uses the same SMTP env vars
-// as emailAlert.js (SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS) — no new
-// configuration needed if key-failure alerts are already set up.
-//
-// Unlike emailAlert.js, this one throws on failure rather than silently
-// warning — an OTP email that doesn't send means the user is stuck and
-// register() must know so it can tell them, instead of leaving them
-// waiting on a code that never arrives.
+// Sends the signup email-verification OTP via mailer.js (Brevo HTTPS API —
+// see that file's comment for why this replaced raw SMTP).
 
-let transporter = null;
-
-const getTransporter = () => {
-  if (transporter) return transporter;
-  const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS } = process.env;
-  if (!SMTP_HOST || !SMTP_USER || !SMTP_PASS) return null;
-
-  const nodemailer = require('nodemailer');
-  transporter = nodemailer.createTransport({
-    host: SMTP_HOST,
-    port: Number(SMTP_PORT) || 587,
-    secure: Number(SMTP_PORT) === 465,
-    auth: { user: SMTP_USER, pass: SMTP_PASS },
-    // Render's network doesn't support outbound IPv6, but Gmail's SMTP host
-    // resolves to both an IPv4 and IPv6 address — Node tries IPv6 first by
-    // default and hangs for the full timeout before failing over. Forcing
-    // IPv4 here skips that entirely.
-    family: 4,
-    connectionTimeout: 10000,
-  });
-  return transporter;
-};
+const { sendEmail } = require('./mailer');
 
 const sendOtpEmail = async (to, otpCode) => {
-  const t = getTransporter();
-  if (!t) {
-    throw new Error('Email sending is not configured on the server — contact support.');
-  }
-
-  await t.sendMail({
-    from: process.env.SMTP_USER,
+  await sendEmail({
     to,
     subject: 'Verify your SkillPulse account',
     text:
