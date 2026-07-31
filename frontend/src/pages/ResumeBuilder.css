@@ -16,6 +16,7 @@
     grid-template-columns: 1fr;
     height: auto;
     overflow: visible;
+    padding: 1rem;
   }
 
   .resume-editor-outer {
@@ -540,8 +541,7 @@
   /* 4. Let the right side handle its own scrolling */
   height: 100%;
   overflow-y: auto;
-  padding-bottom: 3rem;
-  padding-right: 0.5rem;
+  padding: 1.25rem 0.5rem 3rem 1rem;
   /* Optional: adds a little breathing room for the scrollbar */
   min-width: 0;
   /* critical: without this, the grid column locks to the

@@ -86,11 +86,11 @@ const CareerAgent = () => {
 
   useEffect(() => {
     if (headerRef.current) setHeaderHeight(headerRef.current.offsetHeight);
-  }, []);
+  }, [historyLoaded]); 
 
   useEffect(() => {
     const el = messagesRef.current;
-    if (!el) return;
+    if (!el) return; // still on the skeleton — real .ca-messages doesn't exist yet
 
     const handleScroll = () => {
       const current = el.scrollTop;
@@ -108,7 +108,7 @@ const CareerAgent = () => {
 
     el.addEventListener('scroll', handleScroll, { passive: true });
     return () => el.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [historyLoaded]); 
 
   const setStep = (key, status) => setStepStatus(p => ({ ...p, [key]: status }));
   const addMsg = (msg) => setMessages(p => [...p, msg]);
