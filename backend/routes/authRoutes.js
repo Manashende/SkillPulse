@@ -1,6 +1,6 @@
 const express = require('express');
 const { body } = require('express-validator');
-const { register, login, getMe, verifyOtp, resendOtp } = require('../controllers/authController');
+const { register, login, getMe, verifyOtp, resendOtp, forgotPassword, resetPassword } = require('../controllers/authController');
 const { protect } = require('../middleware/auth');
 const router = express.Router();
 
@@ -18,6 +18,16 @@ router.post('/verify-otp', [
 router.post('/resend-otp', [
   body('email').isEmail().withMessage('Valid email required'),
 ], resendOtp);
+
+router.post('/forgot-password', [
+  body('email').isEmail().withMessage('Valid email required'),
+], forgotPassword);
+
+router.post('/reset-password', [
+  body('email').isEmail().withMessage('Valid email required'),
+  body('otp').trim().isLength({ min: 6, max: 6 }).withMessage('Enter the 6-digit code'),
+  body('newPassword').isLength({ min: 6 }).withMessage('Password min 6 characters'),
+], resetPassword);
 
 router.post('/login', [
   body('email').isEmail().withMessage('Valid email required'),

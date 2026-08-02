@@ -35,11 +35,13 @@ API.interceptors.response.use(
 );
 
 export const authAPI = {
-  register:   (data) => API.post('/auth/register', data),
-  login:      (data) => API.post('/auth/login', data),
-  getMe:      ()     => API.get('/auth/me'),
-  verifyOtp:  (data) => API.post('/auth/verify-otp', data),
-  resendOtp:  (data) => API.post('/auth/resend-otp', data),
+  register:       (data) => API.post('/auth/register', data),
+  login:          (data) => API.post('/auth/login', data),
+  getMe:          ()     => API.get('/auth/me'),
+  verifyOtp:      (data) => API.post('/auth/verify-otp', data),
+  resendOtp:      (data) => API.post('/auth/resend-otp', data),
+  forgotPassword: (data) => API.post('/auth/forgot-password', data),
+  resetPassword:  (data) => API.post('/auth/reset-password', data),
 };
 
 export const userAPI = {

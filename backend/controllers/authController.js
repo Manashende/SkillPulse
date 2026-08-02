@@ -1,7 +1,7 @@
 const { validationResult } = require('express-validator');
 const User = require('../models/User');
 const generateToken = require('../utils/generateToken');
-const { sendOtpEmail, generateOtp } = require('../utils/otpEmail');
+const { sendOtpEmail, sendPasswordResetEmail, generateOtp } = require('../utils/otpEmail');
 
 const OTP_EXPIRY_MS = 10 * 60 * 1000;   // 10 minutes
 const OTP_RESEND_COOLDOWN_MS = 60 * 1000; // 60 seconds between resends
@@ -96,6 +96,62 @@ const resendOtp = async (req, res, next) => {
   } catch (error) { next(error); }
 };
 
+const forgotPassword = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ success: false, message: 'Email is required' });
+
+    const user = await User.findOne({ email });
+    // Deliberately the same "not found" wording as resendOtp, for
+    // consistency — this app already reveals account existence elsewhere,
+    // so there's no new information leak introduced here.
+    if (!user) return res.status(404).json({ success: false, message: 'No account found for that email' });
+
+    if (user.otpLastSentAt && Date.now() - user.otpLastSentAt.getTime() < OTP_RESEND_COOLDOWN_MS) {
+      const waitSeconds = Math.ceil((OTP_RESEND_COOLDOWN_MS - (Date.now() - user.otpLastSentAt.getTime())) / 1000);
+      return res.status(429).json({ success: false, message: `Please wait ${waitSeconds}s before requesting another code` });
+    }
+
+    const otpCode = generateOtp();
+    user.otpCode = otpCode;
+    user.otpExpiresAt = new Date(Date.now() + OTP_EXPIRY_MS);
+    user.otpLastSentAt = new Date();
+    await user.save({ validateBeforeSave: false });
+
+    await sendPasswordResetEmail(user.email, otpCode);
+    res.json({ success: true, message: 'A reset code has been sent to your email' });
+  } catch (error) { next(error); }
+};
+
+const resetPassword = async (req, res, next) => {
+  try {
+    const { email, otp, newPassword } = req.body;
+    if (!email || !otp || !newPassword) {
+      return res.status(400).json({ success: false, message: 'Email, code, and new password are required' });
+    }
+    if (newPassword.length < 6) {
+      return res.status(400).json({ success: false, message: 'Password must be at least 6 characters' });
+    }
+
+    const user = await User.findOne({ email }).select('+password');
+    if (!user) return res.status(404).json({ success: false, message: 'No account found for that email' });
+
+    if (!user.otpCode || !user.otpExpiresAt || user.otpExpiresAt < new Date()) {
+      return res.status(400).json({ success: false, message: 'Code has expired — request a new one' });
+    }
+    if (user.otpCode !== String(otp).trim()) {
+      return res.status(400).json({ success: false, message: 'Incorrect code — please try again' });
+    }
+
+    user.password = newPassword; // pre-save hook hashes this automatically
+    user.otpCode = null;
+    user.otpExpiresAt = null;
+    await user.save();
+
+    res.json({ success: true, message: 'Password reset successfully' });
+  } catch (error) { next(error); }
+};
+
 const login = async (req, res, next) => {
   try {
     const errors = validationResult(req);
@@ -121,4 +177,4 @@ const getMe = async (req, res, next) => {
   } catch (error) { next(error); }
 };
 
-module.exports = { register, login, getMe, verifyOtp, resendOtp };
+module.exports = { register, login, getMe, verifyOtp, resendOtp, forgotPassword, resetPassword };

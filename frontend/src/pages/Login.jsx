@@ -122,7 +122,7 @@ const Login = () => {
               <div className="auth-field">
                 <div className="auth-field-header">
                   <label className="auth-label">Password</label>
-                  <a href="#" className="auth-forgot">Forgot?</a>
+                  <Link to="/forgot-password" className="auth-forgot">Forgot?</Link>
                 </div>
                 <div className="auth-input-wrap">
                   <span className="auth-input-icon">
