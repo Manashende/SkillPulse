@@ -43,8 +43,6 @@ const CareerAgent = () => {
   const textareaRef = useRef(null);
   const messagesRef = useRef(null);
   const headerRef = useRef(null);
-  const lastScrollTop = useRef(0);
-  const [headerVisible, setHeaderVisible] = useState(true);
   const [headerHeight, setHeaderHeight] = useState(null);
 
   // Load from the DB on mount. If nothing's there yet, migrate any old
@@ -86,29 +84,7 @@ const CareerAgent = () => {
 
   useEffect(() => {
     if (headerRef.current) setHeaderHeight(headerRef.current.offsetHeight);
-  }, [historyLoaded]); 
-
-  useEffect(() => {
-    const el = messagesRef.current;
-    if (!el) return; // still on the skeleton — real .ca-messages doesn't exist yet
-
-    const handleScroll = () => {
-      const current = el.scrollTop;
-      const delta = current - lastScrollTop.current;
-
-      if (current < 40) {
-        setHeaderVisible(true);
-      } else if (delta > 8) {
-        setHeaderVisible(false);
-      } else if (delta < -8) {
-        setHeaderVisible(true);
-      }
-      lastScrollTop.current = current;
-    };
-
-    el.addEventListener('scroll', handleScroll, { passive: true });
-    return () => el.removeEventListener('scroll', handleScroll);
-  }, [historyLoaded]); 
+  }, [historyLoaded]);  
 
   const setStep = (key, status) => setStepStatus(p => ({ ...p, [key]: status }));
   const addMsg = (msg) => setMessages(p => [...p, msg]);
@@ -264,7 +240,7 @@ const CareerAgent = () => {
       {/* ── Header ── */}
       <div
         ref={headerRef}
-        className={'ca-header' + (!headerVisible ? ' ca-header-hidden' : '')}
+        className="ca-header"
         style={headerHeight ? { '--ca-header-h': headerHeight + 'px' } : undefined}
       >
         <div className="ca-header-text">
